@@ -11,17 +11,15 @@ services:
     depends_on:
       - db_bot
     restart: on-failure
-#    volumes:
-#      - ./app:/app
     command: python start_app.py
 
   db_bot:
     container_name: db_bot
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: 'Kyrtsun'
-      POSTGRES_PASSWORD: 'Kirtsun123'
-      POSTGRES_DB: 'DB_FOR_BOT'
+      POSTGRES_USER: 'Admin'
+      POSTGRES_PASSWORD: 'Admin123'
+      POSTGRES_DB: 'BASE_FOR_TELEG_BOT'
     ports:
       - '5432:5432'
     networks:

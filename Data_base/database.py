@@ -1,8 +1,13 @@
 import json
+import os
+
+from dotenv import load_dotenv
 
 from logger import get_logger
 
 import psycopg2
+
+load_dotenv()
 
 logger = get_logger('data_base')
 
@@ -11,9 +16,9 @@ def check_connection():
     global conn, cur
     try:
         conn = psycopg2.connect(
-            dbname='DB_FOR_BOT',
-            user='Kyrtsun',
-            password='Kirtsun123',
+            dbname=os.getenv('dbname'),
+            user=os.getenv('user'),
+            password=os.getenv('password'),
             host='db_bot',
             port='5432'
         )
@@ -119,6 +124,7 @@ async def get_size(size, sm):
             if res:
                 return res
             else:
+                logger.info('Данных по обуви не было.')
                 return False
         except psycopg2.Error as e:
             logger.critical(f'Данные не были выгружены! {e}')
