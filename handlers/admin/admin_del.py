@@ -1,12 +1,15 @@
 import json
 
-from aiogram import types, Router, F
+from Data_base.database import del_boots, get_size
+
+from aiogram import F, Router, types
 from aiogram.filters import Command
-from aiogram.utils.media_group import MediaGroupBuilder
-from loader import admins
-from buttons import DelCallbackFactory, get_buttons_del
-from Data_base.database import get_size, del_boots
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.media_group import MediaGroupBuilder
+
+from buttons import DelCallbackFactory, get_buttons_del
+
+from loader import admins
 
 
 admin_del_router = Router()
@@ -48,13 +51,13 @@ async def del_info(
             await callback.message.answer_media_group(media=media.build())
             await callback.message.answer(text='⬆️⬆️⬆️', reply_markup=builder.as_markup())
             await callback.answer()
-        await callback.message.answer(text=f'Что бы снова получить возможность просмотреть все размеры, необходимо'
-                                           f'выполнить команду: \n /adm_menu')
+        await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
+                                           'выполнить команду: \n /adm_menu')
     else:
         await callback.message.answer(text='К сожалению, данного размера пока нет в наличии.')
         await callback.answer()
-        await callback.message.answer(text=f'Что бы снова получить возможность просмотреть все размеры, необходимо'
-                                           f'выполнить команду: \n /adm_menu')
+        await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
+                                           'выполнить команду: \n /adm_menu')
 
 
 @admin_del_router.callback_query(F.data.startswith('del '))
@@ -66,7 +69,3 @@ async def del_data(callback: types.CallbackQuery):
                                                   message_id=callback.message.message_id)
     else:
         await callback.message.answer(text='Что-то пошло не так с удалением!')
-
-
-
-

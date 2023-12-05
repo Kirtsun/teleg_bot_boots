@@ -1,6 +1,7 @@
-from aiogram import types, Router
-from aiogram.filters import Command
 from Data_base.database import save_user_info
+
+from aiogram import Router, types
+from aiogram.filters import Command
 
 
 start_router = Router()

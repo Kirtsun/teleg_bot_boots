@@ -1,9 +1,13 @@
-from aiogram import types, Router
-from buttons.button_for_size import SizesCallbackFactory, get_buttons_size
-from Data_base.database import get_size
 import json
-from aiogram.utils.media_group import MediaGroupBuilder
+
+from Data_base.database import get_size
+
+from aiogram import Router, types
 from aiogram.filters import Command
+from aiogram.utils.media_group import MediaGroupBuilder
+
+from buttons.button_for_size import SizesCallbackFactory, get_buttons_size
+
 
 user_router = Router()
 
@@ -38,10 +42,10 @@ async def send_all_products(
                     media.add_video(i)
             await callback.message.answer_media_group(media=media.build())
             await callback.answer()
-        await callback.message.answer(text=f'Что бы снова получить возможность просмотреть все размеры, необходимо'
-                                           f'выполнить команду: \n /menu')
+        await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
+                                           'выполнить команду: \n /menu')
     else:
         await callback.message.answer(text='К сожалению, данного размера пока нет в наличии.')
         await callback.answer()
-        await callback.message.answer(text=f'Что бы снова получить возможность просмотреть все размеры, необходимо'
-                                           f'выполнить команду: \n /menu')
+        await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
+                                           'выполнить команду: \n /menu')

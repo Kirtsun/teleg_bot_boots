@@ -1,10 +1,14 @@
-from aiogram import types, Router, F
-from aiogram.filters import Command
 from Data_base.database import save_post
-from loader import admins
-from state.state_save_photo import SavePhoto
+
+from aiogram import F, Router, types
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
+
 from helping_func_for_admin import check_right_sm
+
+from loader import admins
+
+from state.state_save_photo import SavePhoto
 
 admin_save_router = Router()
 
@@ -109,7 +113,7 @@ async def boots_name(message: types.Message, state: FSMContext):
         data = await state.update_data(name=message.text)
         await state.set_state(SavePhoto.size)
         await message.answer(text='Отправь размер, просто цифры.\n'
-                              'Если хочешь остановить загрузку - /cancel')
+                                  'Если хочешь остановить загрузку - /cancel')
 
 
 @admin_save_router.message(SavePhoto.size)
@@ -121,7 +125,7 @@ async def size(message: types.Message, state: FSMContext):
         data = await state.update_data(size=int(message.text))
         await state.set_state(SavePhoto.sm)
         await message.answer(text='Сейчас нужно отправить размер стельки, нужно указать только цифры.\n'
-                              'Если хочешь остановить загрузку - /cancel')
+                                  'Если хочешь остановить загрузку - /cancel')
 
 
 @admin_save_router.message(SavePhoto.sm)
@@ -130,8 +134,8 @@ async def sm(message: types.Message, state: FSMContext):
     if await check_right_sm(sm=message.text, size=data['size']):
         data = await state.update_data(sm=float(message.text))
         await state.set_state(SavePhoto.condition)
-        await message.answer(text='Укажи состояние обуви, нужна цифра от 1 до 10.\n'
-                              'Если хочешь остановить загрузку - /cancel')
+        await message.answer(text='Укажи состояние обуви, нужна цифра от 1 до 10.\n '
+                                  'Если хочешь остановить загрузку - /cancel')
     else:
         await message.answer('Указан не верный размер стельки или у этого размера нет такой стельки!\n'
                              'Отпрявь заново стельку!')
@@ -158,7 +162,3 @@ async def price(message: types.Message, state: FSMContext):
     else:
         await message.answer('Что то пошло не так :(')
     await state.clear()
-
-
-
-

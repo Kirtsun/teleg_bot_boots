@@ -1,6 +1,8 @@
-import psycopg2
 import json
+
 from logger import get_logger
+
+import psycopg2
 
 logger = get_logger('data_base')
 
