@@ -52,7 +52,7 @@ def get_buttons_del():
         text='Размер 48(31 см)', callback_data=DelCallbackFactory(value_size=48, value_sm=31)
     )
     builder.button(
-        text='Размер 48(31,5 см)', callback_data=DelCallbackFactory(value_size=46, value_sm=31.5)
+        text='Размер 48(31,5 см)', callback_data=DelCallbackFactory(value_size=48, value_sm=31.5)
     )
     builder.adjust(2)
     return builder.as_markup()
