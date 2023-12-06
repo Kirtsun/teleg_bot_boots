@@ -52,7 +52,7 @@ def sql_start():
                 'CREATE TABLE IF NOT EXISTS users ('
                 'id SERIAL PRIMARY KEY,'
                 'name TEXT NOT NULL,'
-                'user_id INTEGER NOT NULL)')
+                'user_id BIGINT NOT NULL)')
             logger.info('Таблица юзеры создана')
             conn.commit()
         except Exception as e:
