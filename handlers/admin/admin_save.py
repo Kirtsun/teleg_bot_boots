@@ -158,7 +158,7 @@ async def price(message: types.Message, state: FSMContext):
     if await save_post(data):
         await message.answer('Информация сохранена :)\n'
                              '/load\n\n'
-                             '/amd_menu')
+                             '/adm_menu')
     else:
         await message.answer('Что то пошло не так :(')
     await state.clear()
