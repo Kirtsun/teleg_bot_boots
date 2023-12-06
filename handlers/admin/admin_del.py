@@ -24,13 +24,13 @@ async def admin_menu(message: types.Message):
 async def del_info(
         callback: types.CallbackQuery,
         callback_data: DelCallbackFactory):
-    builder = InlineKeyboardBuilder()
     res = await get_size(callback_data.value_size, callback_data.value_sm)
     await callback.message.delete()
     if res:
         for row in res:
             photo = json.loads(row[1])
             videos = json.loads(row[2])
+            builder = InlineKeyboardBuilder()
             media = MediaGroupBuilder(
                 caption=f'{row[3]}\n'
                         f'🔛Size: {row[4]}({row[5]} см)\n'
