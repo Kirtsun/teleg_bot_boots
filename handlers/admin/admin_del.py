@@ -1,8 +1,10 @@
+import asyncio
+
 import json
 
 from Data_base.database import del_boots, get_size
 
-from aiogram import F, Router, types
+from aiogram import F, Router, exceptions, types
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.utils.media_group import MediaGroupBuilder
@@ -11,8 +13,10 @@ from buttons import DelCallbackFactory, get_buttons_del
 
 from loader import admins
 
+from logger import get_logger
 
 admin_del_router = Router()
+logger = get_logger('admin_del')
 
 
 @admin_del_router.message(Command('adm_menu'), F.from_user.id.in_(admins))
@@ -27,6 +31,7 @@ async def del_info(
     res = await get_size(callback_data.value_size, callback_data.value_sm)
     await callback.message.delete()
     if res:
+        await callback.answer()
         for row in res:
             photo = json.loads(row[1])
             videos = json.loads(row[2])
@@ -36,7 +41,7 @@ async def del_info(
                         f'🔛Size: {row[4]}({row[5]} см)\n'
                         f'🔝Condition: {row[6]}/10\n'
                         f'💰Price: {row[7]} UAN\n'
-                        f'Питання та замовлення у приват -> @Yaroslav_2500'
+                        f'Вопросы и заказы -> @Yaroslav_2500'
             )
             if photo:
                 for i in photo:
@@ -48,14 +53,17 @@ async def del_info(
                 text='Удалить.',
                 callback_data=f'del {row[0]}'
             ))
-            await callback.message.answer_media_group(media=media.build())
-            await callback.message.answer(text='⬆️⬆️⬆️', reply_markup=builder.as_markup())
-            await callback.answer()
+            try:
+                await callback.message.answer_media_group(media=media.build())
+                await callback.message.answer(text='⬆️⬆️⬆️', reply_markup=builder.as_markup())
+                await asyncio.sleep(delay=2)
+            except Exception or exceptions.TelegramAPIError as e:
+                logger.critical(f'Не получилось выгрузить все посты! {e}')
+                await callback.message.answer(text='Не получилось выгрузить все! Есть какая-то ошибка!')
         await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
                                            'выполнить команду: \n /adm_menu')
     else:
         await callback.message.answer(text='К сожалению, данного размера пока нет в наличии.')
-        await callback.answer()
         await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
                                            'выполнить команду: \n /adm_menu')
 

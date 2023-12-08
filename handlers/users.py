@@ -1,15 +1,20 @@
+import asyncio
+
 import json
 
 from Data_base.database import get_size
 
-from aiogram import Router, types
+from aiogram import Router, exceptions, types
 from aiogram.filters import Command
 from aiogram.utils.media_group import MediaGroupBuilder
 
 from buttons.button_for_size import SizesCallbackFactory, get_buttons_size
 
+from logger import get_logger
+
 
 user_router = Router()
+logger = get_logger('users')
 
 
 @user_router.message(Command('menu'))
@@ -24,6 +29,7 @@ async def send_all_products(
     res = await get_size(callback_data.value_size, callback_data.value_sm)
     await callback.message.delete()
     if res:
+        await callback.answer()
         for row in res:
             photo = json.loads(row[1])
             videos = json.loads(row[2])
@@ -32,7 +38,7 @@ async def send_all_products(
                         f'🔛Size: {row[4]}({row[5]} см)\n'
                         f'🔝Condition: {row[6]}/10\n'
                         f'💰Price: {row[7]} UAN\n'
-                        f'Питання та замовлення у приват -> @Yaroslav_2500'
+                        f'Вопросы и заказы -> @Yaroslav_2500'
             )
             if photo:
                 for i in photo:
@@ -40,8 +46,13 @@ async def send_all_products(
             if videos:
                 for i in videos:
                     media.add_video(i)
-            await callback.message.answer_media_group(media=media.build())
-            await callback.answer()
+            try:
+                await callback.message.answer_media_group(media=media.build())
+            except Exception or exceptions.TelegramAPIError as e:
+                logger.critical(f'Не удалось отправить все посты для пользователя! {e}')
+                await callback.message.answer(text='К сожалению, что то пошло не так, обратитесь к админу'
+                                                   ' -> @Yaroslav_2500')
+            await asyncio.sleep(delay=2)
         await callback.message.answer(text='Что бы снова получить возможность просмотреть все размеры, необходимо'
                                            'выполнить команду: \n /menu')
     else:
